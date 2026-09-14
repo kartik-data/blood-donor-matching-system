@@ -10,7 +10,27 @@ const donorPortalRoutes = require("./routes/donorPortalRoutes");
 
 const app = express();
 
-app.use(cors());
+// Set up allowed origins for development & production
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173", // Common Vite dev port
+  process.env.FRONTEND_URL  // Your Vercel domain from Render environment variables
+].filter(Boolean);          // Removes undefined values if process.env.FRONTEND_URL isn't set yet
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, or Postman)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Optional: keeps cookies/headers working if using authentication
+  })
+);
+
 app.use(express.json());
 
 connectDB();
