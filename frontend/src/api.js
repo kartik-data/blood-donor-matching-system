@@ -1,9 +1,12 @@
 import axios from "axios";
 
-// If deployed on Vercel or local, use live Render URL when online
-const API_BASE_URL = process.env.NODE_ENV === "production"
-  ? "https://your-backend-name.onrender.com/api"  // Replace with your actual Render URL
-  : "http://localhost:5000/api";
+// Make sure to replace 'your-actual-render-name' with your REAL Render backend URL
+const REAL_RENDER_URL = "https://your-actual-render-name.onrender.com";
+
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? `${REAL_RENDER_URL}/api`
+    : "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
