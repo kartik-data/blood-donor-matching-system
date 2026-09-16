@@ -13,23 +13,30 @@ const app = express();
 // Set up allowed origins for development & production
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://localhost:5173", // Common Vite dev port
-  process.env.FRONTEND_URL  // Your Vercel domain from Render environment variables
-].filter(Boolean);          // Removes undefined values if process.env.FRONTEND_URL isn't set yet
+  "http://localhost:5173",
+  "https://blood-donor-matching-system.vercel.app", // Explicit fallback
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, or Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Optional: keeps cookies/headers working if using authentication
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, or Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+// Enable CORS for all routes
+app.use(cors(corsOptions));
+
+// Explicitly handle preflight OPTIONS requests across all routes
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
