@@ -6,6 +6,7 @@ import RequestBlood from "./pages/RequestBlood";
 import SearchDonors from "./pages/SearchDonors";
 import DonorPortal from "./pages/DonorPortal";
 import AdminDashboard from "./pages/AdminDashboard";
+import api from "./api"; // ✅ Correct relative path in the same folder
 
 export default function App() {
   return (
