@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import QuoteBanner from "../components/QuoteBanner";
-
+import api from "../api"; // ✅ Correct (goes up one folder to src/api.js)
 export default function Home() {
   return (
     <div className="home">
