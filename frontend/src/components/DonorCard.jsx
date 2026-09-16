@@ -1,25 +1,31 @@
 export default function DonorCard({ donor }) {
+  // Return null or fallback if the donor prop itself is missing
+  if (!donor) return null;
+
+  // Provide default matchScore fallback (0) to prevent undefined checks
+  const matchScore = donor.matchScore ?? 0;
+
   const scoreLabel =
-    donor.matchScore >= 90 ? "Best match" : donor.matchScore >= 60 ? "Good match" : "Possible match";
+    matchScore >= 90 ? "Best match" : matchScore >= 60 ? "Good match" : "Possible match";
   const scoreClass =
-    donor.matchScore >= 90 ? "badge-best" : donor.matchScore >= 60 ? "badge-good" : "badge-fair";
+    matchScore >= 90 ? "badge-best" : matchScore >= 60 ? "badge-good" : "badge-fair";
 
   // Privacy: only reveal the full contact number if the donor has marked themselves available.
-  // Otherwise show a masked number so patients aren't tempted to call someone who opted out.
-  const maskNumber = (num) => (num ? `${num.slice(0, 2)}XXXXX${num.slice(-3)}` : "");
+  // Added optional chaining (?.) and fallback so slice doesn't crash if contactNumber is missing
+  const maskNumber = (num) => (num ? `${String(num).slice(0, 2)}XXXXX${String(num).slice(-3)}` : "N/A");
 
   return (
     <div className="donor-card">
       <div className="donor-card-header">
-        <h4>{donor.name}</h4>
+        <h4>{donor.name || "Unknown Donor"}</h4>
         <span className={`badge ${scoreClass}`}>{scoreLabel}</span>
       </div>
       <div className="donor-card-body">
-        <span className="blood-group-pill">{donor.bloodGroup}</span>
-        <p><i className="donor-icon">📍</i>{donor.city}</p>
+        <span className="blood-group-pill">{donor.bloodGroup || "N/A"}</span>
+        <p><i className="donor-icon">📍</i>{donor.city || "Unknown Location"}</p>
         <p>
           Contact:{" "}
-          {donor.isAvailable ? donor.contactNumber : maskNumber(donor.contactNumber)}
+          {donor.isAvailable ? (donor.contactNumber || "N/A") : maskNumber(donor.contactNumber)}
         </p>
         {!donor.isAvailable && (
           <p className="privacy-note">Number revealed once donor confirms availability</p>
